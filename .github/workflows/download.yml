@@ -1,5 +1,6 @@
 name: Download
 on:
+  workflow_dispatch:
   push:
     branches:
       - master
@@ -18,13 +19,11 @@ jobs:
           fetch-depth: 0 # need to check if this is necessary, may be grabbing unnecessary commit data
 
       - name: Setup Python
-        needs: Checkout
         uses: actions/setup-python@v2
         with:
           python-version: 3.8
 
       - name: Download
-        needs: Setup Python
         run: |
           python3 webscraper.py
         env:
@@ -32,13 +31,11 @@ jobs:
           password: ${{ secrets.LOGIN_PASSWORD }}
 
       - name: Commit Data
-        needs: Download
         run: | # add timestamp system here
           git add *.csv
           git commit -m 'Retrieving new data'
       
       - name: Push Data
-        needs: Commit Data
         uses: ad-m/github-push-action@master
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
