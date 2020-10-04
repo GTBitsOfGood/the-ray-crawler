@@ -33,6 +33,12 @@ jobs:
           username: ${{ secrets.LOGIN_USERNAME }}
           password: ${{ secrets.LOGIN_PASSWORD }}
 
+
+      - uses: actions/upload-artifact@v2
+        with: 
+          name: selenium-logs
+          path: selenium-logs.txt
+
       - name: Commit Data
         run: | # add timestamp system here
           git add *.csv

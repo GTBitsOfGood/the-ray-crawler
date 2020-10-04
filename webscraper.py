@@ -33,7 +33,7 @@ prefs = {'download.default_directory' : download_path}
 chrome_options.add_experimental_option('prefs', prefs)
 
 # Start up the browser and navigate to sunnyportal
-browser = webdriver.Chrome(options=chrome_options)
+browser = webdriver.Chrome(options=chrome_options, service_log_path='selenium-logs.txt')
 browser.set_page_load_timeout(15)
 
 browser.get('http://www.sunnyportal.com')
