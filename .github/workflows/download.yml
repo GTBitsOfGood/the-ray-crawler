@@ -43,8 +43,7 @@ jobs:
         run: | # add timestamp system here
           git config --global user.name 'Github Action'
           git config --global user.email '<>'
-          git rm -rf .
-          git checkout HEAD -- *.csv
+          git add *.csv
           git commit -m 'Retrieving new data'
       
       - name: Push Data
