@@ -4,6 +4,9 @@ on:
   push:
     branches:
       - master
+
+  schedule:
+    - cron: "*/5 * * * *"
       
 
 jobs:
@@ -49,6 +52,7 @@ jobs:
           rm README.md
           rm requirements.txt
           rm webscraper.py
+          rm selenium-logs.txt
       
           git add .
           git commit -m 'Retrieving new data'
