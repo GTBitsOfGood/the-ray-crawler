@@ -41,8 +41,10 @@ jobs:
 
       - name: Commit Data
         run: | # add timestamp system here
+          git config --global user.name 'Github Action'
+          git config --global user.email '<>'
           git add *.csv
-          git commit --author="Charlie Luo <>" -m 'Retrieving new data'
+          git commit -m 'Retrieving new data'
       
       - name: Push Data
         uses: ad-m/github-push-action@master
