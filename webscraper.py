@@ -19,8 +19,6 @@ email = os.getenv("username")
 password = os.getenv("password")
 download_path = str(Path('.').resolve())
 
-print("Email retrieved: " + email)
-
 # Set the download path
 chrome_options = webdriver.ChromeOptions()
 chrome_options.add_argument('--no-sandbox')
@@ -36,10 +34,9 @@ chrome_options.add_experimental_option('prefs', prefs)
 
 # Start up the browser and navigate to sunnyportal
 browser = webdriver.Chrome(options=chrome_options)
+browser.set_page_load_timeout(15)
+
 browser.get('http://www.sunnyportal.com')
-
-
-print("Attempting to login")
 
 # Logging in
 user_element = browser.find_element_by_id("txtUserName")
@@ -49,13 +46,10 @@ pass_element.send_keys(password)
 submit = browser.find_element_by_id("ctl00_ContentPlaceHolder1_Logincontrol1_LoginBtn")
 submit.click()
 
-print("Logging in")
 
 # Wait for page to load
 wait = WebDriverWait(browser, 10)
 download = wait.until(EC.presence_of_element_located((By.ID, 'ctl00_ContentPlaceHolder1_UserControlShowDashboard1_UserControlShowEnergyAndPower1_ImageButtonDownload')))
-
-print("Logged in")
 
 # Hover over the menu button to show download button
 menu_button = browser.find_element_by_id("ctl00_ContentPlaceHolder1_UserControlShowDashboard1_UserControlShowEnergyAndPower1_OpenButtonsDivImg")
