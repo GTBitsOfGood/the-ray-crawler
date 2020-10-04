@@ -42,7 +42,7 @@ jobs:
       - name: Commit Data
         run: | # add timestamp system here
           git add *.csv
-          git commit -m 'Retrieving new data'
+          git commit --author="Charlie Luo <>" -m 'Retrieving new data'
       
       - name: Push Data
         uses: ad-m/github-push-action@master
