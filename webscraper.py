@@ -79,7 +79,6 @@ time.sleep(10)
 wait = WebDriverWait(browser, 10)
 download = wait.until(EC.presence_of_element_located((By.ID, 'ctl00_ContentPlaceHolder1_UserControlShowDashboard1_UserControlShowEnergyAndPower1_ImageButtonDownload')))
 
-browser.save_screenshot("screenshot.png")
 
 # Hover over the menu button to show download button
 menu_button = browser.find_element_by_id("ctl00_ContentPlaceHolder1_UserControlShowDashboard1_UserControlShowEnergyAndPower1_OpenButtonsDivImg")
