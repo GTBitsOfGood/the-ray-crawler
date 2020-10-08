@@ -44,59 +44,68 @@ user_element.send_keys(email)
 pass_element = browser.find_element_by_id("txtPassword")
 pass_element.send_keys(password)
 submit = browser.find_element_by_id("ctl00_ContentPlaceHolder1_Logincontrol1_LoginBtn")
-submit.click()
+submit.click() 
 
 
-# Wait for page to load
-wait = WebDriverWait(browser, 10)
-download = wait.until(EC.presence_of_element_located((By.ID, 'ctl00_ContentPlaceHolder1_UserControlShowDashboard1_UserControlShowEnergyAndPower1_ImageButtonDownload')))
+"""
+Note:
+If this script is run late at night, the daily data won't be available, and the default view will be on the month tab
+Thus, we check first if we can navigate to the monthly data tab - if we can, daily data is available, and if we can't, then we can only grab monthly data
+"""
 
-# Hover over the menu button to show download button
-menu_button = browser.find_element_by_id("ctl00_ContentPlaceHolder1_UserControlShowDashboard1_UserControlShowEnergyAndPower1_OpenButtonsDivImg")
-hover = ActionChains(browser).move_to_element(menu_button)
-hover.perform()
+try :
+    monthly_data_tab = browser.find_element_by_id("ctl00_ContentPlaceHolder1_UserControlShowDashboard1_UserControlShowEnergyAndPower1_LinkButton_TabBack1")
 
-# If file has already been downloaded, remove older version
-now = datetime.datetime.now()
-file_path = download_path + "/Energy_and_Power_Day_" + str(now.year) + "-" + str(now.month).zfill(2) + "-" + str(now.day).zfill(2) + ".csv"
-if os.path.exists(file_path):
-    os.remove(file_path)
+    # Wait for page to load
+    wait = WebDriverWait(browser, 10)
+    download = wait.until(EC.presence_of_element_located((By.ID, 'ctl00_ContentPlaceHolder1_UserControlShowDashboard1_UserControlShowEnergyAndPower1_ImageButtonDownload')))
 
-# download latest csv
-download.click()
+    # Hover over the menu button to show download button
+    menu_button = browser.find_element_by_id("ctl00_ContentPlaceHolder1_UserControlShowDashboard1_UserControlShowEnergyAndPower1_OpenButtonsDivImg")
+    hover = ActionChains(browser).move_to_element(menu_button)
+    hover.perform()
 
-# Wait until the file has finished downloading
-while not os.path.exists(file_path):
-    time.sleep(1)
+    # If file has already been downloaded, remove older version
+    now = datetime.datetime.now()
+    file_path = download_path + "/Energy_and_Power_Day_" + str(now.year) + "-" + str(now.month).zfill(2) + "-" + str(now.day).zfill(2) + ".csv"
+    if os.path.exists(file_path):
+        os.remove(file_path)
+
+    # download latest csv
+    download.click()
+
+    # Wait until the file has finished downloading
+    while not os.path.exists(file_path):
+        time.sleep(1)
+    
+    monthly_data_tab.click()
+    time.sleep(8)
+
+except :
+    print("Daily data not available - only getting monthly data")
+
+finally :
+    wait = WebDriverWait(browser, 10)
+    download = wait.until(EC.presence_of_element_located((By.ID, 'ctl00_ContentPlaceHolder1_UserControlShowDashboard1_UserControlShowEnergyAndPower1_ImageButtonDownload')))
 
 
+    # Hover over the menu button to show download button
+    menu_button = browser.find_element_by_id("ctl00_ContentPlaceHolder1_UserControlShowDashboard1_UserControlShowEnergyAndPower1_OpenButtonsDivImg")
+    hover = ActionChains(browser).move_to_element(menu_button)
+    hover.perform()
 
-monthly_data_tab = browser.find_element_by_id("ctl00_ContentPlaceHolder1_UserControlShowDashboard1_UserControlShowEnergyAndPower1_LinkButton_TabBack1")
-monthly_data_tab.click()
+    # If file has already been downloaded, remove older version
+    now = datetime.datetime.now()
+    file_path = download_path + "/Energy_and_Power_Month.csv"
+    if os.path.exists(file_path):
+        os.remove(file_path)
 
-time.sleep(10)
+    # download latest csv
+    download.click()
 
-wait = WebDriverWait(browser, 10)
-download = wait.until(EC.presence_of_element_located((By.ID, 'ctl00_ContentPlaceHolder1_UserControlShowDashboard1_UserControlShowEnergyAndPower1_ImageButtonDownload')))
-
-
-# Hover over the menu button to show download button
-menu_button = browser.find_element_by_id("ctl00_ContentPlaceHolder1_UserControlShowDashboard1_UserControlShowEnergyAndPower1_OpenButtonsDivImg")
-hover = ActionChains(browser).move_to_element(menu_button)
-hover.perform()
-
-# If file has already been downloaded, remove older version
-now = datetime.datetime.now()
-file_path = download_path + "/Energy_and_Power_Month.csv"
-if os.path.exists(file_path):
-    os.remove(file_path)
-
-# download latest csv
-download.click()
-
-# Wait until the file has finished downloading
-while not os.path.exists(file_path):
-    time.sleep(1)
+    # Wait until the file has finished downloading
+    while not os.path.exists(file_path):
+        time.sleep(1)
 
 
 
