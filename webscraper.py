@@ -50,11 +50,16 @@ submit.click()
 """
 Note:
 If this script is run late at night, the daily data won't be available, and the default view will be on the month tab
-Thus, we check first if we can navigate to the monthly data tab - if we can, daily data is available, and if we can't, then we can only grab monthly data
+Thus, we check if the daily data tab is available - if it is, we know we had defaulted to the monthly data tab, and so we can only get monthly data
+If it isn't then both daily and monthly data is available, and we try to grab both
 """
 
 try :
-    monthly_data_tab = browser.find_element_by_id("ctl00_ContentPlaceHolder1_UserControlShowDashboard1_UserControlShowEnergyAndPower1_LinkButton_TabBack1")
+    daily_data_tab = browser.find_element_by_id("ctl00_ContentPlaceHolder1_UserControlShowDashboard1_UserControlShowEnergyAndPower1_LinkButton_TabFront3")
+
+
+except :
+    print("Daily data available")
 
     # Wait for page to load
     wait = WebDriverWait(browser, 10)
@@ -77,12 +82,13 @@ try :
     # Wait until the file has finished downloading
     while not os.path.exists(file_path):
         time.sleep(1)
-    
+
+
+    monthly_data_tab = browser.find_element_by_id("ctl00_ContentPlaceHolder1_UserControlShowDashboard1_UserControlShowEnergyAndPower1_LinkButton_TabBack1")
+
     monthly_data_tab.click()
     time.sleep(8)
 
-except :
-    print("Daily data not available - only getting monthly data")
 
 finally :
     wait = WebDriverWait(browser, 10)
