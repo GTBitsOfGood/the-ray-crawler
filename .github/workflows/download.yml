@@ -54,13 +54,9 @@ jobs:
           rm webscraper.py
           rm selenium-logs.txt
       
-          git add *.csv
+          git add .
           git commit -m 'Retrieving new data'
+
+          git push origin master:data
       
-      - name: Push Data
-        uses: ad-m/github-push-action@master
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          branch: 'data'
-          force: true
 
