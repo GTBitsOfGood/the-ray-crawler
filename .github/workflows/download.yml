@@ -57,6 +57,6 @@ jobs:
           git add .
           git commit -m 'Retrieving new data'
 
-          git push origin master:data
+          git push origin master:data --force
       
 
