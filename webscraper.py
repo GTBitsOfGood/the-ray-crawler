@@ -114,5 +114,62 @@ finally :
         time.sleep(1)
 
 
+    # Getting yearly data
+    yearly_data_tab = browser.find_element_by_id("ctl00_ContentPlaceHolder1_UserControlShowDashboard1_UserControlShowEnergyAndPower1_LinkButton_TabBack2")
+    yearly_data_tab.click();
+    time.sleep(8)
+
+
+    wait = WebDriverWait(browser, 10)
+    download = wait.until(EC.presence_of_element_located((By.ID, 'ctl00_ContentPlaceHolder1_UserControlShowDashboard1_UserControlShowEnergyAndPower1_ImageButtonDownload')))
+
+
+    # Hover over the menu button to show download button
+    menu_button = browser.find_element_by_id("ctl00_ContentPlaceHolder1_UserControlShowDashboard1_UserControlShowEnergyAndPower1_OpenButtonsDivImg")
+    hover = ActionChains(browser).move_to_element(menu_button)
+    hover.perform()
+
+    # If file has already been downloaded, remove older version
+    now = datetime.datetime.now()
+    file_path = download_path + "/Energy_and_Power_Year.csv"
+    if os.path.exists(file_path):
+        os.remove(file_path)
+
+    # download latest csv
+    download.click()
+
+    # Wait until the file has finished downloading
+    while not os.path.exists(file_path):
+        time.sleep(1)
+
+
+    # Getting total data
+    total_data_tab = browser.find_element_by_id("ctl00_ContentPlaceHolder1_UserControlShowDashboard1_UserControlShowEnergyAndPower1_LinkButton_TabBack3")
+    total_data_tab.click();
+    time.sleep(8)
+
+
+    wait = WebDriverWait(browser, 10)
+    download = wait.until(EC.presence_of_element_located((By.ID, 'ctl00_ContentPlaceHolder1_UserControlShowDashboard1_UserControlShowEnergyAndPower1_ImageButtonDownload')))
+
+
+    # Hover over the menu button to show download button
+    menu_button = browser.find_element_by_id("ctl00_ContentPlaceHolder1_UserControlShowDashboard1_UserControlShowEnergyAndPower1_OpenButtonsDivImg")
+    hover = ActionChains(browser).move_to_element(menu_button)
+    hover.perform()
+
+    # If file has already been downloaded, remove older version
+    now = datetime.datetime.now()
+    file_path = download_path + "/Energy_and_Power_Total.csv"
+    if os.path.exists(file_path):
+        os.remove(file_path)
+
+    # download latest csv
+    download.click()
+
+    # Wait until the file has finished downloading
+    while not os.path.exists(file_path):
+        time.sleep(1)
+
 
 browser.quit()
