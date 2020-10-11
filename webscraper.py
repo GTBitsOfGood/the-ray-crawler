@@ -4,6 +4,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.action_chains import ActionChains
+from selenium.webdriver.support.select import Select
 from dotenv import load_dotenv
 from pathlib import Path  # Python 3.6+ only
 import os
@@ -95,53 +96,155 @@ finally :
     download = wait.until(EC.presence_of_element_located((By.ID, 'ctl00_ContentPlaceHolder1_UserControlShowDashboard1_UserControlShowEnergyAndPower1_ImageButtonDownload')))
 
 
-    # Hover over the menu button to show download button
-    menu_button = browser.find_element_by_id("ctl00_ContentPlaceHolder1_UserControlShowDashboard1_UserControlShowEnergyAndPower1_OpenButtonsDivImg")
-    hover = ActionChains(browser).move_to_element(menu_button)
-    hover.perform()
+    # Getting monthly data 
 
-    # If file has already been downloaded, remove older version
-    now = datetime.datetime.now()
-    file_path = download_path + "/Energy_and_Power_Month.csv"
-    if os.path.exists(file_path):
-        os.remove(file_path)
+    # Make sure no extra CSV files have already been downloaded
+    download_file_path = download_path + "/Energy_and_Power_Month.csv"
+    if os.path.exists(download_file_path):
+        os.remove(download_file_path)
 
-    # download latest csv
-    download.click()
+    prev_month = 0
+    while (True) :
 
-    # Wait until the file has finished downloading
-    while not os.path.exists(file_path):
-        time.sleep(1)
+        month_selector = Select(browser.find_element_by_name("ctl00$ContentPlaceHolder1$UserControlShowDashboard1$UserControlShowEnergyAndPower1$DatePickerMonth"))
+        month_selected = month_selector.first_selected_option.text.strip()
+
+        year_selector = Select(browser.find_element_by_name("ctl00$ContentPlaceHolder1$UserControlShowDashboard1$UserControlShowEnergyAndPower1$DatePickerYear"))
+        year_selected = year_selector.first_selected_option.text.strip()        
+        
+        if (month_selected == prev_month) :
+            print("Month selected: " + month_selected)
+            print("Previous month: " + prev_month)
+
+            # browser.save_screenshot("test.png")
+            print("Repeated month detected, trying again")
+
+            time.sleep(10)
+            month_selector = Select(browser.find_element_by_name("ctl00$ContentPlaceHolder1$UserControlShowDashboard1$UserControlShowEnergyAndPower1$DatePickerMonth"))
+            month_selected = month_selector.first_selected_option.text.strip()
+            if (month_selected == prev_month) :
+                break            
 
 
-    # Getting yearly data
-    yearly_data_tab = browser.find_element_by_id("ctl00_ContentPlaceHolder1_UserControlShowDashboard1_UserControlShowEnergyAndPower1_LinkButton_TabBack2")
-    yearly_data_tab.click();
+        prev_month = month_selected
+
+        print("Getting data from " + month_selected + " " + year_selected)
+
+
+        try :
+            wait = WebDriverWait(browser, 10)
+            download = wait.until(EC.presence_of_element_located((By.ID, 'ctl00_ContentPlaceHolder1_UserControlShowDashboard1_UserControlShowEnergyAndPower1_ImageButtonDownload')))
+        
+        # If data cannot be found and the wait times out, immediately go to next page
+        except :
+
+            print("Timed out, data could not be found, skipping")
+
+            prev_month_button = browser.find_element_by_id("ctl00_ContentPlaceHolder1_UserControlShowDashboard1_UserControlShowEnergyAndPower1_btn_prev")
+            prev_month_button.click()
+
+            time.sleep(8)
+            continue
+
+
+        # Hover over the menu button to show download button
+        menu_button = browser.find_element_by_id("ctl00_ContentPlaceHolder1_UserControlShowDashboard1_UserControlShowEnergyAndPower1_OpenButtonsDivImg")
+        hover = ActionChains(browser).move_to_element(menu_button)
+        hover.perform()
+
+        # If file has already been downloaded, remove older version
+        download_file_path = download_path + "/Energy_and_Power_Month.csv"
+        updated_file_path = download_path + "/Energy_and_Power_" + month_selected + "_" + year_selected + ".csv"
+        if os.path.exists(updated_file_path):
+            os.remove(updated_file_path)
+
+        # download latest csv
+        download.click()
+
+        # Wait until the file has finished downloading
+        while not os.path.exists(download_file_path):
+            time.sleep(1)
+
+        os.rename(download_file_path, updated_file_path)
+
+        prev_month_button = browser.find_element_by_id("ctl00_ContentPlaceHolder1_UserControlShowDashboard1_UserControlShowEnergyAndPower1_btn_prev")
+        prev_month_button.click()
+
+        time.sleep(4)
+
+
+
     time.sleep(8)
 
+    print("Getting yearly data")
 
-    wait = WebDriverWait(browser, 10)
-    download = wait.until(EC.presence_of_element_located((By.ID, 'ctl00_ContentPlaceHolder1_UserControlShowDashboard1_UserControlShowEnergyAndPower1_ImageButtonDownload')))
+    # Getting yearly data
+    # Navigate to yearly tab
+    yearly_data_tab = browser.find_element_by_id("ctl00_ContentPlaceHolder1_UserControlShowDashboard1_UserControlShowEnergyAndPower1_LinkButton_TabBack2")
+    yearly_data_tab.click();
+    time.sleep(4)
+
+    # Make sure no extra CSV files have already been downloaded
+    download_file_path = download_path + "/Energy_and_Power_Year.csv"
+    if os.path.exists(download_file_path):
+        os.remove(download_file_path)
+
+    prev_year = 0
+    while (True) :
+
+        year_selector = Select(browser.find_element_by_name("ctl00$ContentPlaceHolder1$UserControlShowDashboard1$UserControlShowEnergyAndPower1$DatePickerYear"))
+        year_selected = year_selector.first_selected_option.text.strip()
+        
+        if (year_selected == prev_year) :
+
+            time.sleep(10)
+            year_selector = Select(browser.find_element_by_name("ctl00$ContentPlaceHolder1$UserControlShowDashboard1$UserControlShowEnergyAndPower1$DatePickerYear"))
+            year_selected = year_selector.first_selected_option.text.strip()
+            if (year_selected == prev_year) :
+                break     
 
 
-    # Hover over the menu button to show download button
-    menu_button = browser.find_element_by_id("ctl00_ContentPlaceHolder1_UserControlShowDashboard1_UserControlShowEnergyAndPower1_OpenButtonsDivImg")
-    hover = ActionChains(browser).move_to_element(menu_button)
-    hover.perform()
+        prev_year = year_selected
 
-    # If file has already been downloaded, remove older version
-    now = datetime.datetime.now()
-    file_path = download_path + "/Energy_and_Power_Year.csv"
-    if os.path.exists(file_path):
-        os.remove(file_path)
+        try :
+            wait = WebDriverWait(browser, 10)
+            download = wait.until(EC.presence_of_element_located((By.ID, 'ctl00_ContentPlaceHolder1_UserControlShowDashboard1_UserControlShowEnergyAndPower1_ImageButtonDownload')))
+        
+        # If data cannot be found and the wait times out, immediately go to next page
+        except :
+            prev_year_button = browser.find_element_by_id("ctl00_ContentPlaceHolder1_UserControlShowDashboard1_UserControlShowEnergyAndPower1_btn_prev")
+            prev_year_button.click()
 
-    # download latest csv
-    download.click()
+            time.sleep(4)
+            continue
 
-    # Wait until the file has finished downloading
-    while not os.path.exists(file_path):
-        time.sleep(1)
+        # Hover over the menu button to show download button
+        menu_button = browser.find_element_by_id("ctl00_ContentPlaceHolder1_UserControlShowDashboard1_UserControlShowEnergyAndPower1_OpenButtonsDivImg")
+        hover = ActionChains(browser).move_to_element(menu_button)
+        hover.perform()
 
+        # If file has already been downloaded, remove older version
+        download_file_path = download_path + "/Energy_and_Power_Year.csv"
+        updated_file_path = download_path + "/Energy_and_Power_" + year_selected + ".csv"
+        if os.path.exists(updated_file_path):
+            os.remove(updated_file_path)
+
+        # download latest csv
+        download.click()
+
+        # Wait until the file has finished downloading
+        while not os.path.exists(download_file_path):
+            time.sleep(1)
+
+        os.rename(download_file_path, updated_file_path)
+
+        prev_year_button = browser.find_element_by_id("ctl00_ContentPlaceHolder1_UserControlShowDashboard1_UserControlShowEnergyAndPower1_btn_prev")
+        prev_year_button.click()
+
+        time.sleep(4)
+
+
+    print("Getting total data")
 
     # Getting total data
     total_data_tab = browser.find_element_by_id("ctl00_ContentPlaceHolder1_UserControlShowDashboard1_UserControlShowEnergyAndPower1_LinkButton_TabBack3")
@@ -171,5 +274,6 @@ finally :
     while not os.path.exists(file_path):
         time.sleep(1)
 
+    print("All data retrieved successfully")
 
 browser.quit()
