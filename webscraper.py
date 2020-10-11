@@ -195,12 +195,17 @@ finally :
         year_selector = Select(browser.find_element_by_name("ctl00$ContentPlaceHolder1$UserControlShowDashboard1$UserControlShowEnergyAndPower1$DatePickerYear"))
         year_selected = year_selector.first_selected_option.text.strip()
         
+        print("Getting data from " + year_selected)
         if (year_selected == prev_year) :
+
+            print("Repeat year detected, trying again")
 
             time.sleep(10)
             year_selector = Select(browser.find_element_by_name("ctl00$ContentPlaceHolder1$UserControlShowDashboard1$UserControlShowEnergyAndPower1$DatePickerYear"))
             year_selected = year_selector.first_selected_option.text.strip()
             if (year_selected == prev_year) :
+
+                print("Repeat year confirmed, stopping yearly data")
                 break     
 
 
