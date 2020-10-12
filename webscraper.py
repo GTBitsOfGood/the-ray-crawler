@@ -283,6 +283,12 @@ finally :
         time.sleep(4)
 
 
+    print("Reset to current year")
+    year_selector = Select(browser.find_element_by_name("ctl00$ContentPlaceHolder1$UserControlShowDashboard1$UserControlShowEnergyAndPower1$DatePickerYear"))
+    year_selector.select_by_visible_text(str(datetime.datetime.now().year))
+    time.sleep(10)
+
+
     print("Getting total data")
 
     # Getting total data
