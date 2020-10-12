@@ -55,6 +55,15 @@ Thus, we check if the daily data tab is available - if it is, we know we had def
 If it isn't then both daily and monthly data is available, and we try to grab both
 """
 
+if os.path.exists('RETRIEVED_MONTHS.txt'):
+    os.remove('RETRIEVED_MONTHS.txt')
+if os.path.exists('RETRIEVED_YEARS.txt'):
+    os.remove('RETRIEVED_YEARS.txt')
+months_retrieved_file = open('RETRIEVED_MONTHS.txt', 'x')
+years_retrieved_file = open('RETRIEVED_YEARS.txt', 'x')
+
+
+
 try :
     daily_data_tab = browser.find_element_by_id("ctl00_ContentPlaceHolder1_UserControlShowDashboard1_UserControlShowEnergyAndPower1_LinkButton_TabFront3")
 
@@ -167,6 +176,8 @@ finally :
 
         os.rename(download_file_path, updated_file_path)
 
+        months_retrieved_file.write(month_selected + '-' + year_selected + '\n')
+
         prev_month_button = browser.find_element_by_id("ctl00_ContentPlaceHolder1_UserControlShowDashboard1_UserControlShowEnergyAndPower1_btn_prev")
         prev_month_button.click()
 
@@ -188,6 +199,11 @@ finally :
     download_file_path = download_path + "/Energy_and_Power_Year.csv"
     if os.path.exists(download_file_path):
         os.remove(download_file_path)
+
+
+    year_selector = Select(browser.find_element_by_name("ctl00$ContentPlaceHolder1$UserControlShowDashboard1$UserControlShowEnergyAndPower1$DatePickerYear"))
+    year_selector.select_by_visible_text(str(datetime.datetime.now().year))
+    time.sleep(10)
 
     prev_year = 0
     while (True) :
@@ -243,6 +259,8 @@ finally :
 
         os.rename(download_file_path, updated_file_path)
 
+        years_retrieved_file.write(year_selected + '\n')
+
         prev_year_button = browser.find_element_by_id("ctl00_ContentPlaceHolder1_UserControlShowDashboard1_UserControlShowEnergyAndPower1_btn_prev")
         prev_year_button.click()
 
@@ -281,4 +299,7 @@ finally :
 
     print("All data retrieved successfully")
 
+
+months_retrieved_file.close()
+years_retrieved_file.close()
 browser.quit()
