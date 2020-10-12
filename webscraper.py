@@ -89,10 +89,15 @@ except :
     # download latest csv
     download.click()
 
-    # Wait until the file has finished downloading
-    while not os.path.exists(file_path):
-        time.sleep(1)
 
+    wait_count = 0
+    # Wait until the file has finished downloading
+    while not os.path.exists(file_path) :
+        time.sleep(1)
+        wait_count += 1
+        if (wait_count > 180) :
+            print("Download failed! Continuing...")
+            break
 
     monthly_data_tab = browser.find_element_by_id("ctl00_ContentPlaceHolder1_UserControlShowDashboard1_UserControlShowEnergyAndPower1_LinkButton_TabBack1")
 
@@ -170,9 +175,15 @@ finally :
         # download latest csv
         download.click()
 
+        wait_count = 0
         # Wait until the file has finished downloading
         while not os.path.exists(download_file_path):
             time.sleep(1)
+            wait_count += 1
+            if (wait_count > 180) :
+                print("Download failed! Continuing...")
+                break
+
 
         os.rename(download_file_path, updated_file_path)
 
@@ -253,9 +264,14 @@ finally :
         # download latest csv
         download.click()
 
+        wait_count = 0
         # Wait until the file has finished downloading
-        while not os.path.exists(download_file_path):
+        while not os.path.exists(download_file_path) :
             time.sleep(1)
+            wait_count += 1
+            if (wait_count > 180) :
+                print("Download failed! Continuing...")
+                break
 
         os.rename(download_file_path, updated_file_path)
 
@@ -293,9 +309,15 @@ finally :
     # download latest csv
     download.click()
 
+    wait_count = 0
     # Wait until the file has finished downloading
     while not os.path.exists(file_path):
         time.sleep(1)
+        wait_count += 1
+
+        if (wait_count > 180) :
+            print("Download failed! Continuing...")
+            break
 
     print("All data retrieved successfully")
 
