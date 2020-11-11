@@ -1,5 +1,4 @@
 from selenium import webdriver
-from seleniumrequests import Chrome
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
@@ -35,7 +34,7 @@ prefs = {'download.default_directory' : download_path}
 chrome_options.add_experimental_option('prefs', prefs)
 
 # Start up the browser and navigate to sunnyportal
-browser = Chrome(options=chrome_options, service_log_path='selenium-logs.txt')
+browser = webdriver.Chrome(options=chrome_options, service_log_path='selenium-logs.txt')
 browser.set_page_load_timeout(15)
 
 
