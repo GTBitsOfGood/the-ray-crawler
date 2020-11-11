@@ -1,4 +1,5 @@
 from selenium import webdriver
+from seleniumrequests import Chrome
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
@@ -34,19 +35,42 @@ prefs = {'download.default_directory' : download_path}
 chrome_options.add_experimental_option('prefs', prefs)
 
 # Start up the browser and navigate to sunnyportal
-browser = webdriver.Chrome(options=chrome_options, service_log_path='selenium-logs.txt')
+browser = Chrome(options=chrome_options, service_log_path='selenium-logs.txt')
 browser.set_page_load_timeout(15)
 
-browser.get('http://www.sunnyportal.com')
 
-# Logging in
-user_element = browser.find_element_by_id("txtUserName")
-user_element.send_keys(email)
-pass_element = browser.find_element_by_id("txtPassword")
-pass_element.send_keys(password)
-submit = browser.find_element_by_id("ctl00_ContentPlaceHolder1_Logincontrol1_LoginBtn")
-submit.click() 
 
+# To login, we need to send a post request to SunnyPortal's authentication URL and store the received cookies for the Selenium browser
+import requests
+
+# Start the session
+session = requests.Session()
+
+
+headers = {
+    'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.111 Safari/537.36',
+}
+
+data = {
+  '__EVENTTARGET': 'ctl00$ContentPlaceHolder1$Logincontrol1$LoginBtn',
+  'ctl00$ContentPlaceHolder1$Logincontrol1$txtUserName': email,
+  'ctl00$ContentPlaceHolder1$Logincontrol1$txtPassword': password,
+}
+
+response = session.post('https://www.sunnyportal.com/Templates/Start.aspx', headers=headers, data=data) 
+
+
+# To add the cookies to the domain, must first visit domain then refresh
+browser.get('https://www.sunnyportal.com')
+for cookie in session.cookies :
+    browser.add_cookie({
+        'name': cookie.name,
+        'domain': cookie.domain,
+        'value': cookie.value,
+    })
+
+time.sleep(1)
+browser.get('https://www.sunnyportal.com')
 
 """
 Note:
