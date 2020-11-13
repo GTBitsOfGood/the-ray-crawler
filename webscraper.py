@@ -355,7 +355,7 @@ finally :
             print("Download failed! Continuing...")
             break
 
-    os.rename(file_path, download_path + 'pv4ev/Energy_and_Power_Total.csv')
+    os.rename(file_path, download_path + '/pv4ev/Energy_and_Power_Total.csv')
 
     print("All data retrieved successfully")
 

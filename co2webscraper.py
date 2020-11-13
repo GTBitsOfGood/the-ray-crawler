@@ -268,11 +268,7 @@ while True :
     
 
 
-browser.save_screenshot('test.png')
-
 browser.get('https://www.sunnyportal.com/Templates/DefaultPage.aspx')
-browser.save_screenshot('test2.png')
-
 
 prev_year = -1
 wait = WebDriverWait(browser, 10)
