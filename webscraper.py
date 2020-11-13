@@ -78,12 +78,14 @@ Thus, we check if the daily data tab is available - if it is, we know we had def
 If it isn't then both daily and monthly data is available, and we try to grab both
 """
 
-if os.path.exists('RETRIEVED_MONTHS.txt'):
-    os.remove('RETRIEVED_MONTHS.txt')
-if os.path.exists('RETRIEVED_YEARS.txt'):
-    os.remove('RETRIEVED_YEARS.txt')
-months_retrieved_file = open('RETRIEVED_MONTHS.txt', 'x')
-years_retrieved_file = open('RETRIEVED_YEARS.txt', 'x')
+if not os.path.exists('pv4ev') :
+    os.mkdir('pv4ev')
+if os.path.exists('pv4ev/RETRIEVED_MONTHS.txt'):
+    os.remove('pv4ev/RETRIEVED_MONTHS.txt')
+if os.path.exists('pv4ev/RETRIEVED_YEARS.txt'):
+    os.remove('pv4ev/RETRIEVED_YEARS.txt')
+months_retrieved_file = open('pv4ev/RETRIEVED_MONTHS.txt', 'x')
+years_retrieved_file = open('pv4ev/RETRIEVED_YEARS.txt', 'x')
 
 
 
@@ -112,6 +114,8 @@ except :
     # download latest csv
     download.click()
 
+    print("Getting daily data")
+    
 
     wait_count = 0
     # Wait until the file has finished downloading
@@ -121,6 +125,9 @@ except :
         if (wait_count > 180) :
             print("Download failed! Continuing...")
             break
+
+
+    os.rename(file_path, download_path + '/pv4ev' + "/Energy_and_Power_Day_" + str(now.year) + "-" + str(now.month).zfill(2) + "-" + str(now.day).zfill(2) + ".csv")
 
     monthly_data_tab = browser.find_element_by_id("ctl00_ContentPlaceHolder1_UserControlShowDashboard1_UserControlShowEnergyAndPower1_LinkButton_TabBack1")
 
@@ -191,7 +198,7 @@ finally :
 
         # If file has already been downloaded, remove older version
         download_file_path = download_path + "/Energy_and_Power_Month.csv"
-        updated_file_path = download_path + "/Energy_and_Power_" + month_selected + "_" + year_selected + ".csv"
+        updated_file_path = download_path + "/pv4ev/Energy_and_Power_" + month_selected + "_" + year_selected + ".csv"
         if os.path.exists(updated_file_path):
             os.remove(updated_file_path)
 
@@ -280,7 +287,7 @@ finally :
 
         # If file has already been downloaded, remove older version
         download_file_path = download_path + "/Energy_and_Power_Year.csv"
-        updated_file_path = download_path + "/Energy_and_Power_" + year_selected + ".csv"
+        updated_file_path = download_path + "/pv4ev/Energy_and_Power_" + year_selected + ".csv"
         if os.path.exists(updated_file_path):
             os.remove(updated_file_path)
 
@@ -347,6 +354,8 @@ finally :
         if (wait_count > 180) :
             print("Download failed! Continuing...")
             break
+
+    os.rename(file_path, download_path + 'pv4ev/Energy_and_Power_Total.csv')
 
     print("All data retrieved successfully")
 

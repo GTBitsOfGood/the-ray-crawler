@@ -29,13 +29,19 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Download
+      - name: Download PV4EV
         run: |
           python3 webscraper.py
         env:
           username: ${{ secrets.LOGIN_USERNAME }}
           password: ${{ secrets.LOGIN_PASSWORD }}
 
+      - name: Download CO2
+        run: |
+          python3 co2webscraper.py
+        env:
+          username: ${{ secrets.LOGIN_USERNAME }}
+          password: ${{ secrets.LOGIN_PASSWORD }}
 
       - uses: actions/upload-artifact@v2
         with: 
