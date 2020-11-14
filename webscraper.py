@@ -96,6 +96,42 @@ try :
 except :
     print("Daily data available")
 
+    # Retrieving daily data causes some annoying edge cases - since it isn't used in the visualization, removed here
+    '''
+    # Wait for page to load
+    wait = WebDriverWait(browser, 10)
+    download = wait.until(EC.presence_of_element_located((By.ID, "ctl00_ContentPlaceHolder1_UserControlShowDashboard1_UserControlShowEnergyAndPower1_ImageButtonDownload")))
+
+    # Hover over the menu button to show download button
+    menu_button = browser.find_element_by_id("ctl00_ContentPlaceHolder1_UserControlShowDashboard1_UserControlShowEnergyAndPower1_OpenButtonsDivImg")
+    hover = ActionChains(browser).move_to_element(menu_button)
+    hover.perform()
+
+    # If file has already been downloaded, remove older version
+    now = datetime.datetime.now()
+    file_path = download_path + "/Energy_and_Power_Day_" + str(now.year) + "-" + str(now.month).zfill(2) + "-" + str(now.day).zfill(2) + ".csv"
+    if os.path.exists(file_path):
+        os.remove(file_path)
+
+    # download latest csv
+    download.click()
+
+    print("Getting daily data")
+    
+
+    wait_count = 0
+    # Wait until the file has finished downloading
+    while not os.path.exists(file_path) :
+        time.sleep(1)
+        wait_count += 1
+        if (wait_count > 180) :
+            print("Download failed! Continuing...")
+            break
+
+
+    os.rename(file_path, download_path + "/pv4ev" + "/Energy_and_Power_Day_" + str(now.year) + "-" + str(now.month).zfill(2) + "-" + str(now.day).zfill(2) + ".csv")
+    '''
+
     monthly_data_tab = browser.find_element_by_id("ctl00_ContentPlaceHolder1_UserControlShowDashboard1_UserControlShowEnergyAndPower1_LinkButton_TabBack1")
 
     monthly_data_tab.click()

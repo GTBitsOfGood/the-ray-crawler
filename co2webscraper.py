@@ -168,6 +168,8 @@ while True :
     download.click()
     time.sleep(3)
 
+    download_failed = False
+
     wait_count = 0
     # Wait until the file has finished downloading
     while not os.path.exists(file_path):
@@ -175,11 +177,13 @@ while True :
         wait_count += 1
         if (wait_count > 45) :
             print("Download failed! Continuing...")
+            download_failed = True
             break
     
-
-    os.rename(file_path, download_path + '/co2' + "/CO2_" + month + "_" + year + ".csv")
-    months_retrieved_file.write(month + '-' + year + '\n')
+    
+    if not download_failed :
+        os.rename(file_path, download_path + '/co2' + "/CO2_" + month + "_" + year + ".csv")
+        months_retrieved_file.write(month + '-' + year + '\n')
 
     prev_month_button = browser.find_element_by_id("ctl00_ContentPlaceHolder1_UserControlConfigAssistant1_ctl00_UserControl1_btn_prev")
     prev_month_button.click()
@@ -243,6 +247,8 @@ while True :
     download.click()
     time.sleep(3)
 
+    download_failed = False
+
     wait_count = 0
     # Wait until the file has finished downloading
     while not os.path.exists(file_path):
@@ -250,11 +256,13 @@ while True :
         wait_count += 1
         if (wait_count > 45) :
             print("Download failed! Continuing...")
+            download_failed = True
             break
     
-
-    os.rename(file_path, download_path + '/co2' + "/CO2_Overall_" + month + "_" + year + ".csv")
-    months_overall_retrieved_file.write(month + '-' + year + '\n')
+    
+    if not download_failed :
+        os.rename(file_path, download_path + '/co2' + "/CO2_Overall_" + month + "_" + year + ".csv")
+        months_overall_retrieved_file.write(month + '-' + year + '\n')
 
     prev_month_button = browser.find_element_by_id("ctl00_ContentPlaceHolder1_UserControlConfigAssistant1_ctl00_UserControl0_LinkButtonLastMonth")
     prev_month_button.click()
@@ -325,6 +333,8 @@ while True :
     download.click()
     time.sleep(3)
 
+    download_failed = False
+
     wait_count = 0
     # Wait until the file has finished downloading
     while not os.path.exists(file_path):
@@ -332,11 +342,13 @@ while True :
         wait_count += 1
         if (wait_count > 45) :
             print("Download failed! Continuing...")
+            download_failed = True
             break
     
-
-    os.rename(file_path, download_path + '/co2' + "/CO2_Overall_" + year + ".csv")
-    years_retrieved_file.write(year + '\n')
+    
+    if not download_failed :
+        os.rename(file_path, download_path + '/co2' + "/CO2_Overall_" + year + ".csv")
+        years_retrieved_file.write(year + '\n')
 
     prev_year_button = browser.find_element_by_id("ctl00_ContentPlaceHolder1_UserControlConfigAssistant1_ctl00_UserControl0_LinkbuttonLastYear")
     prev_year_button.click()
