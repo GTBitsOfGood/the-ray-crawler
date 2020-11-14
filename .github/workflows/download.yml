@@ -48,6 +48,11 @@ jobs:
           name: selenium-logs
           path: selenium-logs.txt
 
+      - uses: actions/upload-artifact@v2
+        with: 
+          name: selenium-logs-co2
+          path: selenium-logs-co2.txt
+
       - name: Commit Data
         run: | # add timestamp system here
           git config --global user.name 'Github Action'
@@ -59,6 +64,8 @@ jobs:
           rm requirements.txt
           rm webscraper.py
           rm selenium-logs.txt
+          rm selenium-logs-co2.txt
+          rm co2webscraper.py
       
           git add .
           git commit -m 'Retrieving new data'

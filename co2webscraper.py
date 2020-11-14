@@ -336,7 +336,7 @@ while True :
     
 
     os.rename(file_path, download_path + '/co2' + "/CO2_Overall_" + year + ".csv")
-    months_overall_retrieved_file.write(year + '\n')
+    years_retrieved_file.write(year + '\n')
 
     prev_year_button = browser.find_element_by_id("ctl00_ContentPlaceHolder1_UserControlConfigAssistant1_ctl00_UserControl0_LinkbuttonLastYear")
     prev_year_button.click()
